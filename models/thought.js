@@ -29,7 +29,7 @@ const { setFlagsFromString } = require("v8");
 // Create a virtual called reactionCount that retrieves the length of the thought's reactions array field on query.
 // Use module 18.25 video schema for reference
 
-const ReactionSchema = newSchema(
+const ReactionSchema = new Schema(
 {
   reactionId: {
     // This datatype is used to store the document’s ID.
@@ -64,7 +64,7 @@ const ReactionSchema = newSchema(
 }
 );
 
-const ThoughtSchema = newSchema(
+const ThoughtSchema = new Schema(
   {
     thoughtText: {
       type: String, 
@@ -96,6 +96,7 @@ const ThoughtSchema = newSchema(
   }
 );
 
+  // Getter function 
 ThoughtSchema.virtual("reactionCount").get(function () {
   return this.reactions.length;
 });

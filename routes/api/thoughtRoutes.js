@@ -1,3 +1,5 @@
+// reference NU module 18 mini project solved student routes
+
 const router = require("express").Router;
 const {
   getThoughts, 

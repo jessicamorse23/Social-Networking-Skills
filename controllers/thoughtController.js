@@ -54,7 +54,60 @@ updateOneThought({ params, body }, res) {
   Thought.findOneAndUpdate({ _id: params.id}, body, {
     new: true, 
     runValidators: true,
+  }).then((dbThoughtData) => {
+    if (!dbThoughtData) {
+      res.status(404).json({message: "thought 💭 not found"});
+      return;
+    }
+    res.json(dbThoughtData);
   })
-  
-}
-}
+  .catch((err) => res.json(err));
+},
+
+deleteThought({ params }, res) {
+  Thought.findOneAndDelete({ _id: params.id})
+  .then((dbThoughtData) => {
+    if (!dbThoughtData) {
+      return res.status(404).json({ message: "thought 💭 not found"});
+    }
+    return User.findByIdAndUpdate(
+      {thoughts: params.id}, 
+      { $pull: {thoughts: params.id}}, 
+      {new: true}
+    );
+  }).then((dbUserData) => {
+    if (!dbUserData) {
+      return res.status(404).json({message: "thought 💭 created - user not found 🤔"})
+    }
+    res.json({message: "thought deleted 💨"});
+  })
+  .catch((err) => res.json(err));
+},
+// POST to create a reaction stored in a single thought's reactions array field
+// DELETE to pull and remove a reaction by the reaction's reactionId value
+
+addOneReaction({ params, body}, res) {
+  Thought.findOneAndUpdate(
+    {_id: params.thoughtId},
+    {$addToSet: {reactions: body}},
+    {new: true, runValidators: true}
+  ).then((dbThoughtData) => {
+    if (!dbThoughtData) {
+      res.status(404).json({ message: "thought 💭 not found"});
+      return;
+    }
+    res.json(dbThoughtData);
+  })
+  .catch((err) => res.json(err));
+},
+deleteOneReaction({ params }, res) {
+Thought.findOneAndUpdate(
+  {_id: params.thoughtId},
+  {$pull: {reactions: {reactionId: params.reactionId}}},
+  {new: true}
+).then((dbThoughtData) => res.json(dbThoughtData))
+.catch((err) => res.json(err));
+},
+};
+
+module.exports = thoughtController;

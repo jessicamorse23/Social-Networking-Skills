@@ -6,11 +6,10 @@ const {
   getUsers,
   getSingleUser,
   createUser, 
-  uodateUser,
+  updateUser,
   deleteUser,
   addFriend, 
   removeFriend,
-  updateUser,
 } = require("../../controllers/userController");
 
 // for testing api/users

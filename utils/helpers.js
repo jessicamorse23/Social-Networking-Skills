@@ -1,6 +1,5 @@
 // This code was posted by instructional staff in slack
 
-dateformat.js
 const addDateSuffix = (date) => {
   let dateStr = date.toString();
 

@@ -3,27 +3,14 @@ const { Thought, User } = require("../models");
 
 const thoughtController = {
 getThoughts(req, res) {
-  Thought.find({})
-  .populate({
-    path: "reactions",
-    select: "-__v",
-  })
-  .select("-__v")
-  .sort({ _id: -1 })
-  .then((dbThoughtData) => res.json(dbThoughtData))
-  .catch((err) =>{
-    console.log(err);
-    res.sendStatus(400);
-  });
+  Thought.find()
+  .then((thoughts) => res.json(thoughts))
+  .catch((err) => res.status(404).json(err));
 },
-getOneThought({ params }, res) {
-  Thought.findOne({_id: params.id })
-  .populate({
-    path: "reactions",
-    select: "-__v",
-  })
-  .select("-__v")
-  .then((dbThoughtData) => {
+
+getOneThought(req, res) {
+  Thought.findOne({_id: req.params.thoughtId })
+.then((dbThoughtData) => {
     if (!dbThoughtData) {
       return res.status(404).json({message: "thought 💭 not found"});
     }
@@ -34,14 +21,15 @@ getOneThought({ params }, res) {
     res.sendStatus(400);
   });
 },
+
 // POST to create a new thought (don't forget to push the created thought's _id to the associated user's thoughts array field)
 // thoughts get posted to the body by the user
-userCreateThought({ params, body}, res) {
-  Thought.create(body)
-  .then(({_id}) => {
+userCreateThought(req, res) {
+  Thought.create(req.body)
+  .then((dbUsertData) => {
     return User.findOneAndUpdate(
       { _id: body.userId },
-      { $push: { thoughts: _id} },
+      { $addToSet: { thoughts: Thought._id} },
       {new: true} 
     );
   })
@@ -50,8 +38,8 @@ userCreateThought({ params, body}, res) {
   })
   .catch((err) => res.json(err));
 },
-updateOneThought({ params, body }, res) {
-  Thought.findOneAndUpdate({ _id: params.id}, body, {
+updateOneThought(req, res) {
+  Thought.findOneAndUpdate({ _id: req.params.thoughtId}, {$set: req.body}, {
     new: true, 
     runValidators: true,
   }).then((dbThoughtData) => {
@@ -64,15 +52,15 @@ updateOneThought({ params, body }, res) {
   .catch((err) => res.json(err));
 },
 
-deleteThought({ params }, res) {
-  Thought.findOneAndDelete({ _id: params.id})
+deleteThought(req, res) {
+  Thought.findOneAndDelete({ _id: params.thoughtId})
   .then((dbThoughtData) => {
     if (!dbThoughtData) {
       return res.status(404).json({ message: "thought 💭 not found"});
     }
-    return User.findByIdAndUpdate(
-      {thoughts: params.id}, 
-      { $pull: {thoughts: params.id}}, 
+    return User.findOneAndUpdate(
+      {thoughts: req.params.thoughtId}, 
+      { $pull: {thoughts: req.params.thoughtId}}, 
       {new: true}
     );
   }).then((dbUserData) => {
@@ -86,10 +74,10 @@ deleteThought({ params }, res) {
 // POST to create a reaction stored in a single thought's reactions array field
 // DELETE to pull and remove a reaction by the reaction's reactionId value
 
-addOneReaction({ params, body}, res) {
+addOneReaction(req, res) {
   Thought.findOneAndUpdate(
-    {_id: params.thoughtId},
-    {$addToSet: {reactions: body}},
+    {_id: req.params.thoughtId},
+    {$addToSet: {reactions: req.body}},
     {new: true, runValidators: true}
   ).then((dbThoughtData) => {
     if (!dbThoughtData) {
@@ -100,10 +88,10 @@ addOneReaction({ params, body}, res) {
   })
   .catch((err) => res.json(err));
 },
-deleteOneReaction({ params }, res) {
+deleteOneReaction(req, res) {
 Thought.findOneAndUpdate(
-  {_id: params.thoughtId},
-  {$pull: {reactions: {reactionId: params.reactionId}}},
+  {_id: req.params.thoughtId},
+  {$pull: {reactions: {reactionId: req.params.reactionId}}},
   {new: true}
 ).then((dbThoughtData) => res.json(dbThoughtData))
 .catch((err) => res.json(err));

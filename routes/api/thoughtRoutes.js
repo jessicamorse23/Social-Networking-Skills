@@ -17,16 +17,16 @@ router.route("/").get(getThoughts).post(userCreateThought);
 
 // for testing = api/thoughts/:id
 router
-.route("/id")
+.route("/:id")
 .get(getOneThought)
 .put(updateOneThought)
 .delete(deleteThought)
 
 // for testing api/thoughts/:thoughtId/reactions
-router.route("/thoughtId/reactions").post(addOneReaction);
+router.route("/:thoughtId/reactions").post(addOneReaction);
 
 //  for testing api/thoughts:thoughtId/reactions/:reactionId
-router.route("/:thoughtId/reactions/reactionId").delete(deleteOneReaction);
+router.route("/:thoughtId/reactions/:reactionId").delete(deleteOneReaction);
 
 module.exports = router;
 

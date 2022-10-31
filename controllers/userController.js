@@ -63,18 +63,6 @@ runValidators: true,
 })
 .catch((err) => res.json(err));
 },
-// deleteUser({ params }, res) {
-//   User.findOneAndDelete({_id: params.id})
-//   .then ((dbUserData) => {
-//     if (!dbUserData) {
-//       return res.status(404).json({ message: "user not found"});
-//     }
-//   }).then (() => {
-//     res.json({message: "user deleted"});
-//   })
-//   .catch((err) => res.json)
-//   }
-// },
 
 deleteUser({ params }, res) {
   User.findOneAndDelete({ _id: params.id})

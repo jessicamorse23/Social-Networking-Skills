@@ -4,7 +4,7 @@ const { setFlagsFromString } = require("v8");
 
 
 
-const ReactionSchema = new Schema(
+const reactionSchema = new Schema(
 {
   reactionId: {
     // This datatype is used to store the document’s ID.
@@ -39,4 +39,4 @@ const ReactionSchema = new Schema(
 }
 );
 
-module.exports = ReactionSchema;
+module.exports = reactionSchema;

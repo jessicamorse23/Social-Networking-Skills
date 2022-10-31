@@ -27,10 +27,10 @@ const { timeStamp } = require("console");
 const { Schema, model, Types } = require("mongoose");
 const dateFormat = require("../utils/helpers");
 const { setFlagsFromString } = require("v8");
-const reaction = require("./reaction");
+const Reaction = require("./reaction");
 
 
-const ThoughtSchema = new Schema(
+const thoughtSchema = new Schema(
   {
     thoughtText: {
       type: String, 
@@ -50,7 +50,7 @@ const ThoughtSchema = new Schema(
       required: true,
     },
 
-    reactions: [ReactionSchema],
+    reactions: [Reaction],
   },
 
   {
@@ -63,7 +63,7 @@ const ThoughtSchema = new Schema(
 );
 
   // Getter function 
-ThoughtSchema.virtual("reactionCount").get(function () {
+thoughtSchema.virtual("reactionCount").get(function () {
   return this.reactions.length;
 });
 

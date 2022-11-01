@@ -26,7 +26,7 @@ getOneThought(req, res) {
 // thoughts get posted to the body by the user
 userCreateThought(req, res) {
   Thought.create(req.body)
-  .then((dbUsertData) => {
+  .then((dbUserData) => {
     return User.findOneAndUpdate(
       { _id: body.userId },
       { $addToSet: { thoughts: Thought._id} },
@@ -53,7 +53,7 @@ updateOneThought(req, res) {
 },
 
 deleteThought(req, res) {
-  Thought.findOneAndDelete({ _id: params.thoughtId})
+  Thought.findOneAndDelete({ _id: req.params.thoughtId})
   .then((dbThoughtData) => {
     if (!dbThoughtData) {
       return res.status(404).json({ message: "thought 💭 not found"});

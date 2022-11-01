@@ -6,11 +6,15 @@ The goal of this project is to build an API for a social network web application
 ## Installation
 
 After cloning the repo [Social Networking Skills](https://github.com/jessicamorse23/Social-Networking-Skills), you can install it locally by running <br>
+  ```
   npm install <br>
+  ```
 
 ## Usage 
 After installing the npm packages, you can invoke the application with <br>
+```
   npm start <br>
+  ```
 
 Images of testing via Insomnia:<br>
 ![Get All Users](./assets/get%20all%20users.png)<br>
